@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppStore } from '../store/useStore';
 import { Zap } from 'lucide-react';
+import { API_BASE_URL, USE_MOCK_AUTH } from '../api/config';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -24,7 +25,33 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      // Use mock authentication for production
+      if (USE_MOCK_AUTH) {
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Mock authentication logic
+        if (email === 'demo@cosmicwatch.com' && password === 'demo123') {
+          const mockUser = {
+            id: 'demo-user',
+            name: 'Demo User',
+            email: 'demo@cosmicwatch.com',
+            role: 'enthusiast' as const
+          };
+          const mockToken = 'mock-jwt-token-' + Date.now();
+          
+          setToken(mockToken);
+          login(mockUser);
+          navigate('/');
+          return;
+        } else {
+          setError('Invalid email or password. Use demo@cosmicwatch.com / demo123 for demo access.');
+          setLoading(false);
+          return;
+        }
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +72,7 @@ export default function Login() {
       login(data.user);
       navigate('/');
     } catch (err) {
-      setError('Failed to connect to server. Make sure backend is running on port 3001.');
+      setError('Failed to connect to server. Please try again later.');
       console.error(err);
     } finally {
       setLoading(false);

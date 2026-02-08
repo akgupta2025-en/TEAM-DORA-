@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Zap, AlertCircle, CheckCircle } from 'lucide-react';
+import { API_BASE_URL, USE_MOCK_AUTH } from '../api/config';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -54,7 +55,20 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/signup', {
+      // Use mock authentication for production
+      if (USE_MOCK_AUTH) {
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Mock signup logic - always succeed for demo
+        setSuccess('Account created successfully! Redirecting to login...');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +93,7 @@ export default function Signup() {
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setError('Failed to connect to server. Make sure backend is running.');
+      setError('Failed to connect to server. Please try again later.');
       console.error(err);
     } finally {
       setLoading(false);
