@@ -75,6 +75,16 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-white mb-2">Orbital Activity</h1>
           <p className="text-slate-400">Monitoring {stats.total} near-Earth objects over the next 7 days.</p>
         </div>
+        <div className="flex gap-3">
+          <a
+            href="https://akgupta2025-en.github.io/Adarsh/?branch=gh-pages"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-accent-blue text-white text-sm font-semibold rounded-lg hover:bg-accent-blue/80 transition-colors"
+          >
+            View
+          </a>
+        </div>
       </div>
 
       {/* Stats Grid */}
